@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TopsyTurvyCakes.Models;
 
 namespace Topsy_Turvy_Cakes
 {
@@ -18,6 +19,7 @@ namespace Topsy_Turvy_Cakes
         {
             services.AddControllers();
             services.AddRazorPages();
+            services.AddTransient<IRecipesService, RecipesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
