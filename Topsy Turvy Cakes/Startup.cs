@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,8 +18,17 @@ namespace Topsy_Turvy_Cakes
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //configures authentication with cookie
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+
             services.AddControllers();
-            services.AddRazorPages();
+            services.AddRazorPages(options =>
+            {
+                options.Conventions.AuthorizeFolder("/Admin");
+                options.Conventions.AuthorizeFolder("/Account");
+                options.Conventions.AllowAnonymousToPage("/Account/Login");
+            });
             services.AddTransient<IRecipesService, RecipesService>();
         }
 
@@ -34,6 +44,10 @@ namespace Topsy_Turvy_Cakes
 
             //enables static file middleware
             app.UseStaticFiles();
+
+            // Tells .NET Core to use auth
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
